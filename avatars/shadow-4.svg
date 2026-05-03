@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <clipPath id="d4"><polygon points="100,6 194,100 100,194 6,100"/></clipPath>
+    <radialGradient id="bg4" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#0a1220"/>
+      <stop offset="100%" stop-color="#05060e"/>
+    </radialGradient>
+    <filter id="glow4">
+      <feGaussianBlur stdDeviation="2.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <polygon points="100,6 194,100 100,194 6,100" fill="url(#bg4)" stroke="#6ee7ff" stroke-width="2.5"/>
+  <polygon points="100,6 194,100 100,194 6,100" fill="none" stroke="#6ee7ff" stroke-width="8" opacity="0.12"/>
+  <g clip-path="url(#d4)">
+    <!-- Ears -->
+    <path d="M72,64 L62,38 L80,62" fill="#0b0c1f" stroke="#6ee7ff" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M128,64 L138,38 L120,62" fill="#0b0c1f" stroke="#6ee7ff" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Inner ear -->
+    <path d="M73,62 L67,46 L78,60" fill="#6ee7ff" opacity="0.15"/>
+    <path d="M127,62 L133,46 L122,60" fill="#6ee7ff" opacity="0.15"/>
+    <!-- Mane/fur around head -->
+    <ellipse cx="100" cy="82" rx="42" ry="36" fill="#0b0c1f"/>
+    <!-- Head -->
+    <ellipse cx="100" cy="82" rx="32" ry="28" fill="#0e0f22"/>
+    <!-- Snout -->
+    <ellipse cx="100" cy="96" rx="18" ry="12" fill="#0b0c1f"/>
+    <ellipse cx="100" cy="100" rx="10" ry="6" fill="#0e0f22"/>
+    <!-- Nose -->
+    <path d="M94,96 Q100,92 106,96" fill="#6ee7ff" opacity="0.4"/>
+    <!-- Beast eyes - horizontal slits -->
+    <ellipse cx="86" cy="78" rx="9" ry="5" fill="#6ee7ff" opacity="0.85" filter="url(#glow4)"/>
+    <ellipse cx="114" cy="78" rx="9" ry="5" fill="#6ee7ff" opacity="0.85" filter="url(#glow4)"/>
+    <ellipse cx="86" cy="78" rx="2" ry="4" fill="#050618"/>
+    <ellipse cx="114" cy="78" rx="2" ry="4" fill="#050618"/>
+    <!-- Fangs -->
+    <path d="M90,105 L87,114 M110,105 L113,114" stroke="#6ee7ff" stroke-width="2.5" stroke-linecap="round" opacity="0.7" filter="url(#glow4)"/>
+    <!-- Body -->
+    <path d="M68,112 Q64,158 100,164 Q136,158 132,112 Q120,118 100,116 Q80,118 68,112Z" fill="#0b0c1f"/>
+    <!-- Fur texture lines -->
+    <path d="M80,125 Q90,120 100,125 Q110,120 120,125" fill="none" stroke="#6ee7ff" stroke-width="1" opacity="0.25"/>
+    <path d="M76,138 Q88,132 100,138 Q112,132 124,138" fill="none" stroke="#6ee7ff" stroke-width="1" opacity="0.2"/>
+  </g>
+</svg>

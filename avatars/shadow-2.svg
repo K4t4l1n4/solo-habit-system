@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <clipPath id="d2"><polygon points="100,6 194,100 100,194 6,100"/></clipPath>
+    <radialGradient id="bg2" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#0e1428"/>
+      <stop offset="100%" stop-color="#06070f"/>
+    </radialGradient>
+    <filter id="glow2">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <polygon points="100,6 194,100 100,194 6,100" fill="url(#bg2)" stroke="#6ee7ff" stroke-width="2.5"/>
+  <polygon points="100,6 194,100 100,194 6,100" fill="none" stroke="#6ee7ff" stroke-width="8" opacity="0.12"/>
+  <g clip-path="url(#d2)">
+    <!-- Flame crown -->
+    <path d="M100,22 Q94,36 88,30 Q90,44 82,40 Q88,54 100,50 Q112,54 118,40 Q110,44 112,30 Q106,36 100,22Z" fill="#0b0c1f" stroke="#6ee7ff" stroke-width="1.2" stroke-linejoin="round"/>
+    <!-- Flame glow -->
+    <path d="M100,26 Q96,36 90,34 Q93,44 100,42 Q107,44 110,34 Q104,36 100,26Z" fill="#6ee7ff" opacity="0.18" filter="url(#glow2)"/>
+    <!-- Body -->
+    <ellipse cx="100" cy="132" rx="36" ry="42" fill="#0b0c1f"/>
+    <!-- Head -->
+    <ellipse cx="100" cy="84" rx="30" ry="32" fill="#0b0c1f"/>
+    <!-- Eyes -->
+    <ellipse cx="88" cy="82" rx="7" ry="5" fill="#6ee7ff" opacity="0.9" filter="url(#glow2)"/>
+    <ellipse cx="112" cy="82" rx="7" ry="5" fill="#6ee7ff" opacity="0.9" filter="url(#glow2)"/>
+    <ellipse cx="88" cy="82" rx="3" ry="3" fill="#fff" opacity="0.6"/>
+    <ellipse cx="112" cy="82" rx="3" ry="3" fill="#fff" opacity="0.6"/>
+    <!-- Wide grin -->
+    <path d="M80,96 Q100,108 120,96" fill="none" stroke="#6ee7ff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+    <path d="M85,96 L88,100 M100,100 L100,104 M112,100 L115,96" stroke="#6ee7ff" stroke-width="1.2" opacity="0.5"/>
+    <!-- Shoulder pads -->
+    <path d="M56,122 Q46,106 62,98 L72,112 Z" fill="#0b0c1f" stroke="#6ee7ff" stroke-width="1" opacity="0.6"/>
+    <path d="M144,122 Q154,106 138,98 L128,112 Z" fill="#0b0c1f" stroke="#6ee7ff" stroke-width="1" opacity="0.6"/>
+  </g>
+</svg>

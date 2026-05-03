@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <clipPath id="d1"><polygon points="100,6 194,100 100,194 6,100"/></clipPath>
+    <radialGradient id="bg1" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#14102e"/>
+      <stop offset="100%" stop-color="#06070f"/>
+    </radialGradient>
+    <filter id="glow1">
+      <feGaussianBlur stdDeviation="2.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <polygon points="100,6 194,100 100,194 6,100" fill="url(#bg1)" stroke="#6ee7ff" stroke-width="2.5"/>
+  <polygon points="100,6 194,100 100,194 6,100" fill="none" stroke="#6ee7ff" stroke-width="8" opacity="0.12"/>
+  <g clip-path="url(#d1)">
+    <!-- Horns -->
+    <path d="M82,64 L70,34 L88,60" fill="#0b0c1f" stroke="#6ee7ff" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M118,64 L130,34 L112,60" fill="#0b0c1f" stroke="#6ee7ff" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Shoulders -->
+    <path d="M54,128 Q40,108 58,96 L76,108 Z" fill="#0b0c1f"/>
+    <path d="M146,128 Q160,108 142,96 L124,108 Z" fill="#0b0c1f"/>
+    <!-- Body -->
+    <path d="M70,108 Q68,158 100,162 Q132,158 130,108 Z" fill="#0b0c1f"/>
+    <!-- Head -->
+    <path d="M74,78 Q74,52 100,50 Q126,52 126,78 Q126,100 100,102 Q74,100 74,78Z" fill="#0b0c1f"/>
+    <!-- Neck -->
+    <rect x="88" y="94" width="24" height="16" rx="3" fill="#0b0c1f"/>
+    <!-- Eye slits -->
+    <path d="M80,78 L95,76" stroke="#6ee7ff" stroke-width="3.5" stroke-linecap="round" filter="url(#glow1)"/>
+    <path d="M105,76 L120,78" stroke="#6ee7ff" stroke-width="3.5" stroke-linecap="round" filter="url(#glow1)"/>
+    <!-- Chest gem -->
+    <circle cx="100" cy="130" r="5" fill="none" stroke="#6ee7ff" stroke-width="1.5" opacity="0.7"/>
+    <circle cx="100" cy="130" r="2.5" fill="#6ee7ff" opacity="0.8" filter="url(#glow1)"/>
+    <!-- Chest line -->
+    <path d="M82,116 L100,110 L118,116" fill="none" stroke="#6ee7ff" stroke-width="1.2" opacity="0.5"/>
+  </g>
+</svg>

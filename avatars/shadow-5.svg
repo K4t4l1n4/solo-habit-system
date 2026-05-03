@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <clipPath id="d5"><polygon points="100,6 194,100 100,194 6,100"/></clipPath>
+    <radialGradient id="bg5" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#10122a"/>
+      <stop offset="100%" stop-color="#06060e"/>
+    </radialGradient>
+    <filter id="glow5">
+      <feGaussianBlur stdDeviation="2.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <polygon points="100,6 194,100 100,194 6,100" fill="url(#bg5)" stroke="#6ee7ff" stroke-width="2.5"/>
+  <polygon points="100,6 194,100 100,194 6,100" fill="none" stroke="#6ee7ff" stroke-width="8" opacity="0.12"/>
+  <g clip-path="url(#d5)">
+    <!-- Cloak behind body -->
+    <path d="M62,102 Q44,136 52,168 Q100,155 148,168 Q156,136 138,102 Z" fill="#08091a"/>
+    <!-- Shoulder armor plates -->
+    <path d="M52,108 Q38,90 56,80 Q66,86 72,100 Z" fill="#0b0c1f" stroke="#6ee7ff" stroke-width="1.2" opacity="0.7"/>
+    <path d="M148,108 Q162,90 144,80 Q134,86 128,100 Z" fill="#0b0c1f" stroke="#6ee7ff" stroke-width="1.2" opacity="0.7"/>
+    <!-- Body armor -->
+    <path d="M70,100 L100,96 L130,100 L128,148 Q100,154 72,148 Z" fill="#0b0c1f"/>
+    <!-- Neck guard -->
+    <rect x="86" y="88" width="28" height="12" rx="4" fill="#0c0d20"/>
+    <!-- Full face helmet -->
+    <path d="M72,76 Q72,46 100,44 Q128,46 128,76 Q128,100 100,102 Q72,100 72,76Z" fill="#0b0c1f"/>
+    <!-- T-visor cross piece -->
+    <rect x="80" y="74" width="40" height="5" rx="2" fill="#6ee7ff" opacity="0.85" filter="url(#glow5)"/>
+    <rect x="97" y="62" width="6" height="24" rx="2" fill="#6ee7ff" opacity="0.85" filter="url(#glow5)"/>
+    <!-- Helmet side details -->
+    <path d="M72,70 Q70,58 78,54" fill="none" stroke="#6ee7ff" stroke-width="1" opacity="0.4"/>
+    <path d="M128,70 Q130,58 122,54" fill="none" stroke="#6ee7ff" stroke-width="1" opacity="0.4"/>
+    <!-- Chest armor lines -->
+    <path d="M80,114 L100,108 L120,114" fill="none" stroke="#6ee7ff" stroke-width="1.5" opacity="0.55"/>
+    <path d="M76,126 L100,120 L124,126" fill="none" stroke="#6ee7ff" stroke-width="1" opacity="0.35"/>
+    <!-- Belt buckle -->
+    <rect x="90" y="140" width="20" height="8" rx="2" fill="none" stroke="#6ee7ff" stroke-width="1.2" opacity="0.6"/>
+    <rect x="96" y="142" width="8" height="4" rx="1" fill="#6ee7ff" opacity="0.4" filter="url(#glow5)"/>
+  </g>
+</svg>

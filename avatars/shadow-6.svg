@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <clipPath id="d6"><polygon points="100,6 194,100 100,194 6,100"/></clipPath>
+    <radialGradient id="bg6" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#0c1228"/>
+      <stop offset="100%" stop-color="#06060e"/>
+    </radialGradient>
+    <filter id="glow6">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <polygon points="100,6 194,100 100,194 6,100" fill="url(#bg6)" stroke="#6ee7ff" stroke-width="2.5"/>
+  <polygon points="100,6 194,100 100,194 6,100" fill="none" stroke="#6ee7ff" stroke-width="8" opacity="0.12"/>
+  <g clip-path="url(#d6)">
+    <!-- Left wing -->
+    <path d="M76,90 Q44,70 28,50 Q36,72 42,88 Q48,100 60,108 Q66,104 76,100 Z" fill="#0b0c1f" stroke="#6ee7ff" stroke-width="1.2" opacity="0.8"/>
+    <!-- Wing feather lines left -->
+    <path d="M70,96 Q50,78 38,60" fill="none" stroke="#6ee7ff" stroke-width="1" opacity="0.4"/>
+    <path d="M66,102 Q48,86 40,72" fill="none" stroke="#6ee7ff" stroke-width="0.8" opacity="0.3"/>
+    <!-- Right wing -->
+    <path d="M124,90 Q156,70 172,50 Q164,72 158,88 Q152,100 140,108 Q134,104 124,100 Z" fill="#0b0c1f" stroke="#6ee7ff" stroke-width="1.2" opacity="0.8"/>
+    <!-- Wing feather lines right -->
+    <path d="M130,96 Q150,78 162,60" fill="none" stroke="#6ee7ff" stroke-width="1" opacity="0.4"/>
+    <path d="M134,102 Q152,86 160,72" fill="none" stroke="#6ee7ff" stroke-width="0.8" opacity="0.3"/>
+    <!-- Halo/crown glow -->
+    <ellipse cx="100" cy="46" rx="26" ry="6" fill="none" stroke="#6ee7ff" stroke-width="2" opacity="0.7" filter="url(#glow6)"/>
+    <!-- Body -->
+    <path d="M68,106 Q66,158 100,164 Q134,158 132,106 Q120,112 100,110 Q80,112 68,106Z" fill="#0b0c1f"/>
+    <!-- Robe details -->
+    <path d="M78,130 L100,124 L122,130" fill="none" stroke="#6ee7ff" stroke-width="1.2" opacity="0.5"/>
+    <path d="M74,144 L100,136 L126,144" fill="none" stroke="#6ee7ff" stroke-width="1" opacity="0.35"/>
+    <!-- Head -->
+    <ellipse cx="100" cy="82" rx="28" ry="28" fill="#0b0c1f"/>
+    <!-- Serene eyes -->
+    <path d="M86,80 L94,78" stroke="#6ee7ff" stroke-width="3" stroke-linecap="round" filter="url(#glow6)"/>
+    <path d="M106,78 L114,80" stroke="#6ee7ff" stroke-width="3" stroke-linecap="round" filter="url(#glow6)"/>
+    <!-- Core chest gem -->
+    <circle cx="100" cy="118" r="7" fill="none" stroke="#6ee7ff" stroke-width="1.5" opacity="0.7"/>
+    <circle cx="100" cy="118" r="4" fill="#6ee7ff" opacity="0.5" filter="url(#glow6)"/>
+  </g>
+</svg>

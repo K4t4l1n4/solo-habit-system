@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solo Habit System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="system-shell">
+    <section class="hero-panel">
+      <div class="aura-grid" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <p class="eyebrow">Sistema de hábitos despierto</p>
+        <h1>Solo Habit Leveling</h1>
+        <p class="subtitle">Convierte tus rutinas en misiones, gana XP y evoluciona tu personaje con cada hábito completado.</p>
+      </div>
+
+      <div class="hunter-card glass-card">
+        <div class="avatar-ring" id="avatarRing" role="button" tabindex="0" aria-label="Cambiar avatar">
+          <img class="avatar-img" id="avatarImg" src="" alt="Avatar seleccionado" hidden>
+          <div class="avatar-face" aria-hidden="true" id="avatarFace">
+            <span class="hair"></span>
+            <span class="eyes"></span>
+            <span class="cloak"></span>
+          </div>
+          <span class="avatar-edit" aria-hidden="true">✎</span>
+        </div>
+        <div>
+          <span class="label">Rango actual</span>
+          <h2 id="rankTitle">Cazador E</h2>
+          <p>Nivel <strong id="levelText">1</strong> · <span id="xpText">0 XP</span></p>
+        </div>
+        <div class="meter">
+          <span id="hpValue">HP 0 / 500</span>
+          <div><i id="hpBar"></i></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard">
+      <article class="glass-card quests-card">
+        <header class="card-header">
+          <div>
+            <span class="label">Task management</span>
+            <h2>Misiones diarias</h2>
+          </div>
+          <button class="icon-button" id="resetDay" aria-label="Reiniciar día" title="Reiniciar día">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4v6h6M20 20v-6h-6M5.4 14a7 7 0 0 0 11.9 3M18.6 10A7 7 0 0 0 6.7 7"/></svg>
+          </button>
+        </header>
+        <div class="quest-list" id="questList"></div>
+      </article>
+
+      <article class="glass-card stats-card">
+        <header class="card-header">
+          <div>
+            <span class="label">Atributos</span>
+            <h2>Estadísticas del héroe</h2>
+          </div>
+          <span class="chip" id="coinText">0G</span>
+        </header>
+        <div class="radar-wrap">
+          <canvas id="radar" width="300" height="300" aria-label="Radar de estadísticas"></canvas>
+          <div class="radar-core"></div>
+        </div>
+        <div class="stat-grid" id="statGrid"></div>
+      </article>
+
+      <article class="glass-card progress-card">
+        <header class="card-header">
+          <div>
+            <span class="label">Level up progression</span>
+            <h2>Ascenso</h2>
+          </div>
+          <span class="level-badge" id="levelBadge">LV 1</span>
+        </header>
+        <div class="xp-meter">
+          <div class="xp-fill" id="xpFill"></div>
+        </div>
+        <p class="xp-progress-label" id="xpProgress">0/100 XP al siguiente nivel</p>
+        <div class="rank-path" id="rankPath"></div>
+      </article>
+
+      <article class="glass-card calendar-card">
+        <header class="card-header">
+          <div>
+            <span class="label">Streak board</span>
+            <h2>Racha · <span class="calendar-month-name" id="calendarMonth"></span></h2>
+          </div>
+          <span class="chip"><strong id="streakText">0</strong> días</span>
+        </header>
+        <div class="week-grid" id="weekGrid"></div>
+      </article>
+
+      <article class="glass-card inventory-card">
+        <header class="card-header">
+          <div>
+            <span class="label">Potion marketplace</span>
+            <h2>Recompensas</h2>
+          </div>
+        </header>
+        <div class="reward-list">
+          <button class="reward" id="rewardDia">
+            <span class="orb violet"></span>
+            <span><strong>Día libre</strong><small>Por cumplir 21 días de racha</small></span>
+          </button>
+          <button class="reward" id="rewardLectura">
+            <span class="orb cyan"></span>
+            <span><strong>Lectura</strong><small>Leer hoy · +50 XP de recompensa</small></span>
+          </button>
+          <button class="reward" id="rewardFumar">
+            <span class="orb gold"></span>
+            <span><strong>No fumar</strong><small>No fumar hoy · +100 XP de recompensa</small></span>
+          </button>
+        </div>
+      </article>
+
+      <article class="glass-card boss-card">
+        <div class="boss-scene" aria-hidden="true">
+          <div class="magic-circle"></div>
+          <div class="shadow-hunter"></div>
+        </div>
+        <div>
+          <span class="label">Boss quest semanal</span>
+          <h2>Derrota a la procrastinación</h2>
+          <p>Completa 5 misiones hoy para activar el golpe crítico y mantener viva la racha.</p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <div class="toast-label">[ sistema ]</div>
+    <div class="toast-msg" id="toastMsg"></div>
+  </div>
+
+  <div class="avatar-modal" id="avatarModal" hidden>
+    <div class="avatar-modal-box glass-card">
+      <div class="avatar-modal-head">
+        <span class="label">Soldados sombra</span>
+        <h3>Elige tu avatar</h3>
+      </div>
+      <div class="avatar-grid" id="avatarGrid"></div>
+      <button class="avatar-modal-close icon-button" id="closeAvatar" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
