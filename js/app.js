@@ -1,6 +1,6 @@
 const XP_PER_LEVEL   = 3500;
 const TOTAL_DAILY_XP = 660;   // 120+120+120+100+100+50+50
-const HP_MAX         = TOTAL_DAILY_XP; // HP refleja directamente el XP ganado hoy
+const HP_MAX         = TOTAL_DAILY_XP;
 const LS_KEY         = "soloHabitV1";
 
 /* ── Pesos de estadísticas por misión ── */
@@ -14,13 +14,12 @@ const QUEST_STAT_WEIGHTS = {
   teeth:   { Fuerza:  15, Enfoque:  60, Disciplina: 100, Conocimiento:  20, Mentalidad: 100 },
 };
 
-// Máximo posible por stat si todas las misiones se completan
 const STAT_MAX = {
-  Fuerza:      390,  // 100+100+100+30+30+15+15
-  Enfoque:     620,  // 100+100+100+100+100+60+60
-  Disciplina:  700,  // 100×7
-  Conocimiento: 460, // 60+60+60+100+100+60+20
-  Mentalidad:  700,  // 100×7
+  Fuerza:       390,  // 100+100+100+30+30+15+15
+  Enfoque:      620,  // 100+100+100+100+100+60+60
+  Disciplina:   700,  // 100×7
+  Conocimiento: 460,  // 60+60+60+100+100+60+20
+  Mentalidad:   700,  // 100×7
 };
 
 const state = {
@@ -29,7 +28,7 @@ const state = {
   coins:          0,
   stats:          { Fuerza: 0, Enfoque: 0, Conocimiento: 0, Disciplina: 0, Mentalidad: 0 },
   completedDays:  {},
-  rewardsClaimed: {},   // clave: "rewardId-YYYY-MM-DD"
+  rewardsClaimed: {},
   quests: [
     { id: "abs",     name: "100 Abdominales",       detail: "Completa 100 abdominales",       xp: 120, stat: "Fuerza",       done: false },
     { id: "squat",   name: "100 Sentadillas",        detail: "Completa 100 sentadillas",        xp: 120, stat: "Fuerza",       done: false },
@@ -41,7 +40,7 @@ const state = {
   ]
 };
 
-const ranks    = ["E", "D", "C", "B", "A", "S"];
+const ranks     = ["E", "D", "C", "B", "A", "S"];
 const questList = document.querySelector("#questList");
 const statGrid  = document.querySelector("#statGrid");
 const weekGrid  = document.querySelector("#weekGrid");
@@ -49,6 +48,9 @@ const rankPath  = document.querySelector("#rankPath");
 const toast     = document.querySelector("#toast");
 const radar     = document.querySelector("#radar");
 const ctx       = radar.getContext("2d");
+
+/* ID de la misión recién completada — solo ella recibe la animación */
+let justCompletedId = null;
 
 /* ── helpers ── */
 
@@ -77,12 +79,8 @@ function getRank() {
   return ranks[Math.min(ranks.length - 1, Math.floor((getLevel() - 1) / 2))];
 }
 
-/* HP = XP ganado hoy directamente (sin escalar) */
-function hpForQuest(quest) {
-  return quest.xp;
-}
+function hpForQuest(quest) { return quest.xp; }
 
-/* Recalcula las estadísticas del héroe según las misiones completadas hoy */
 function recalcStats() {
   const earned = { Fuerza: 0, Enfoque: 0, Disciplina: 0, Conocimiento: 0, Mentalidad: 0 };
   state.quests.forEach(q => {
@@ -121,12 +119,10 @@ function loadProgress() {
     if (data.rewardsClaimed) state.rewardsClaimed = data.rewardsClaimed;
     if (data.questDate === getTodayStr() && data.questsDone) {
       state.quests.forEach(q => { q.done = Boolean(data.questsDone[q.id]); });
-      // HP = suma de XP de misiones completadas hoy
       state.hp = state.quests.filter(q => q.done).reduce((sum, q) => sum + q.xp, 0);
-      // Agregar XP de recompensas reclamadas hoy al HP
       const today = getTodayStr();
-      if (state.rewardsClaimed[`lectura-${today}`])   state.hp += 50;
-      if (state.rewardsClaimed[`no-fumar-${today}`])  state.hp += 100;
+      if (state.rewardsClaimed[`lectura-${today}`])  state.hp += 50;
+      if (state.rewardsClaimed[`no-fumar-${today}`]) state.hp += 100;
     }
     recalcStats();
   } catch (_) {}
@@ -146,8 +142,9 @@ function showToast(message) {
 function renderQuests() {
   questList.innerHTML = "";
   state.quests.forEach(quest => {
+    const isJustDone = quest.id === justCompletedId;
     const button = document.createElement("button");
-    button.className = `quest${quest.done ? " done" : ""}`;
+    button.className = `quest${quest.done ? " done" : ""}${isJustDone ? " just-done" : ""}`;
     button.type = "button";
     button.innerHTML = `
       <span class="check">✓</span>
@@ -157,6 +154,7 @@ function renderQuests() {
     button.addEventListener("click", () => toggleQuest(quest.id));
     questList.append(button);
   });
+  justCompletedId = null;
 }
 
 function renderStats() {
@@ -256,7 +254,6 @@ function drawRadar() {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
-  // Anillos de fondo
   for (let ring = 1; ring <= 4; ring++) {
     ctx.beginPath();
     labels.forEach((_, i) => {
@@ -270,7 +267,6 @@ function drawRadar() {
     ctx.stroke();
   }
 
-  // Líneas de ejes y etiquetas
   labels.forEach((label, i) => {
     const angle = -Math.PI / 2 + (i * Math.PI * 2) / labels.length;
     ctx.beginPath();
@@ -282,7 +278,6 @@ function drawRadar() {
     ctx.fillText(label, center + Math.cos(angle) * 126, center + Math.sin(angle) * 126);
   });
 
-  // Polígono de valores — solo dibujar si hay al menos un stat > 0
   const hasValues = values.some(v => v > 0);
   if (hasValues) {
     ctx.beginPath();
@@ -299,7 +294,6 @@ function drawRadar() {
     ctx.fill();
     ctx.stroke();
 
-    // Puntos en cada vértice
     values.forEach((value, i) => {
       const angle = -Math.PI / 2 + (i * Math.PI * 2) / values.length;
       const r = (Math.min(value, 100) / 100) * maxRadius;
@@ -355,11 +349,15 @@ function render() {
 
 function toggleQuest(id) {
   const quest = state.quests.find(q => q.id === id);
-  if (!quest || quest.done) return;
-  quest.done   = true;
-  state.xp    += quest.xp;
-  state.coins += Math.round(quest.xp * 1.8);
-  state.hp    += hpForQuest(quest);   // HP += XP de la misión
+  if (!quest || quest.done) {
+    if (quest && quest.done) showToast("Misión ya completada hoy.");
+    return;
+  }
+  quest.done      = true;
+  justCompletedId = id;
+  state.xp       += quest.xp;
+  state.coins    += Math.round(quest.xp * 1.8);
+  state.hp       += hpForQuest(quest);
   recalcStats();
   state.completedDays[getTodayStr()] = true;
   showToast(`Misión completada: +${quest.xp} XP`);
@@ -374,8 +372,8 @@ function claimReward(rewardId, xpBonus, label) {
     return;
   }
   state.rewardsClaimed[key] = true;
-  state.xp   += xpBonus;
-  state.hp   += xpBonus;           // HP también sube con el bonus
+  state.xp    += xpBonus;
+  state.hp    += xpBonus;
   state.coins += Math.round(xpBonus * 1.2);
   showToast(`${label}: +${xpBonus} XP obtenidos.`);
   saveProgress();
@@ -393,11 +391,9 @@ function claimDiaLibre() {
 
 function resetDay() {
   state.hp = 0;
-  state.quests = state.quests.filter(q => !q.id.startsWith("extra-"));
   state.quests.forEach(q => { q.done = false; });
   recalcStats();
   delete state.completedDays[getTodayStr()];
-  // Limpiar recompensas de hoy
   const today = getTodayStr();
   Object.keys(state.rewardsClaimed).forEach(k => {
     if (k.endsWith(today)) delete state.rewardsClaimed[k];
@@ -428,7 +424,7 @@ function applyAvatar() {
   const img  = document.querySelector("#avatarImg");
   const face = document.querySelector("#avatarFace");
   if (selectedAvatar >= 0) {
-    img.src = `avatars/shadow-${selectedAvatar + 1}.svg`;
+    img.src = `assets/avatars/shadow-${selectedAvatar + 1}.svg`;
     img.hidden = false;
     face.hidden = true;
   } else {
@@ -446,7 +442,7 @@ function openAvatarModal() {
     btn.className = `avatar-option${i === selectedAvatar ? " selected" : ""}`;
     btn.setAttribute("aria-label", `Soldado sombra ${i + 1}`);
     const img = document.createElement("img");
-    img.src = `avatars/shadow-${i + 1}.svg`;
+    img.src = `assets/avatars/shadow-${i + 1}.svg`;
     img.alt = "";
     btn.append(img);
     btn.addEventListener("click", () => selectAvatar(i));

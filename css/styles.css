@@ -340,13 +340,23 @@ h2 {
   transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
 }
 
-.quest:hover, .reward:hover, .icon-button:hover {
+/* Solo aplica hover a misiones no completadas */
+.quest:not(.done):hover, .reward:hover, .icon-button:hover {
   transform: translateY(-1px);
   border-color: var(--line-strong);
   background: rgba(150, 0, 255, 0.18);
 }
 
-.quest.done { border-color: rgba(0, 255, 136, 0.62); }
+/* Misión completada: borde verde, cursor normal, sin lift en hover */
+.quest.done {
+  border-color: rgba(0, 255, 136, 0.62);
+  cursor: default;
+}
+
+/* Animación solo para la misión recién completada */
+.quest.just-done {
+  animation: quest-done-pulse 0.5s ease-out;
+}
 
 .check {
   width: 28px;
@@ -544,6 +554,31 @@ h2 {
   text-align: left;
 }
 
+.reward:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+  filter: grayscale(0.65);
+  border-color: rgba(170, 0, 255, 0.12);
+  pointer-events: auto;
+}
+
+.reward:disabled:hover {
+  border-color: rgba(170, 0, 255, 0.12);
+  box-shadow: none;
+  transform: none;
+}
+
+.reward:disabled .orb {
+  filter: grayscale(1) brightness(0.5);
+  box-shadow: none;
+}
+
+@keyframes quest-done-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+  70%  { box-shadow: 0 0 0 12px rgba(0, 255, 136, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+}
+
 .orb {
   width: 44px;
   aspect-ratio: 1;
@@ -688,7 +723,6 @@ h2 {
   right: 14px;
 }
 
-/* Toast — estilo panel STATUS */
 .toast {
   position: fixed;
   left: 50%;
@@ -758,7 +792,8 @@ h2 {
   .system-shell { width: min(100% - 20px, 1180px); padding-top: 10px; }
   .hero-panel, .dashboard > * { padding: 14px; }
   h1 { font-size: clamp(2.5rem, 15vw, 4rem); }
-  .hunter-card, .quest, .reward { grid-template-columns: 1fr; }
+  .hunter-card { grid-template-columns: 86px 1fr; }
+  .quest, .reward { grid-template-columns: 1fr; }
   .avatar-ring { width: 76px; }
   .week-grid { gap: 6px; }
   .day-cell { min-height: 40px; font-size: 0.74rem; }
