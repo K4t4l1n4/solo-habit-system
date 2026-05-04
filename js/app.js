@@ -313,6 +313,7 @@ function renderHUD() {
     bossP.textContent = `Completa ${total - completed} misiones más. ${streak > 0 ? `Racha: ${streak} días (${left} para Rango A).` : "Mantén la racha 30 días para ascender a Rango A."}`;
   }
   renderRankPath();
+  renderRewards();
 }
 
 function render() {
@@ -356,36 +357,65 @@ function resetDay() {
   render();
 }
 
-/* ── tienda de recompensas (data-cost) ── */
+/* ── recompensas diarias ── */
 
-function initShopRewards() {
-  document.querySelectorAll(".reward[data-cost]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const cost  = Number(btn.dataset.cost);
-      const label = btn.querySelector("strong").textContent;
-      const small = btn.querySelector("small").textContent;
+function claimReward(rewardId, xpBonus, label) {
+  const key = `${rewardId}-${getTodayStr()}`;
+  if (state.rewardsClaimed[key]) {
+    showToast("Ya reclamaste esta recompensa hoy.");
+    return;
+  }
+  state.rewardsClaimed[key] = true;
+  state.xp    += xpBonus;
+  state.hp     = Math.min(HP_MAX, state.hp + xpBonus);
+  state.coins += Math.round(xpBonus * 1.2);
+  showToast(`${label}: +${xpBonus} XP obtenidos.`);
+  saveProgress();
+  render();
+}
 
-      if (state.coins < cost) {
-        showToast(`Necesitas ${cost - state.coins}G más para "${label}".`);
-        return;
-      }
+function claimDiaLibre() {
+  const streak = calculateStreak();
+  if (streak < 21) {
+    showToast(`Necesitas ${21 - streak} días más de racha para el día libre.`);
+    return;
+  }
+  showToast(`¡Felicidades! Tienes ${streak} días de racha. ¡Día libre merecido, cazadora!`);
+}
 
-      state.coins -= cost;
+function renderRewards() {
+  const streak         = calculateStreak();
+  const today          = getTodayStr();
+  const fumarClaimed   = Boolean(state.rewardsClaimed[`no-fumar-${today}`]);
+  const aguaClaimed    = Boolean(state.rewardsClaimed[`beber-agua-${today}`]);
+  const streakUnlocked = streak >= 21;
 
-      if (small.includes("+20 HP")) {
-        state.hp = Math.min(HP_MAX, state.hp + 20);
-        showToast(`${label} usada. +20 HP · -${cost}G`);
-      } else if (small.includes("+35 XP")) {
-        state.xp += 35;
-        showToast(`${label} activo. +35 XP · -${cost}G`);
-      } else {
-        showToast(`${label} comprada. -${cost}G`);
-      }
+  const fumarBtn = document.querySelector("#rewardFumar");
+  const aguaBtn  = document.querySelector("#rewardAgua");
+  const diaBtn   = document.querySelector("#rewardDia");
 
-      saveProgress();
-      render();
-    });
+  if (fumarBtn) { fumarBtn.disabled = fumarClaimed; }
+  if (aguaBtn)  { aguaBtn.disabled  = aguaClaimed;  }
+
+  if (diaBtn) {
+    diaBtn.disabled = !streakUnlocked;
+    diaBtn.title    = streakUnlocked
+      ? "¡Racha de 21 días desbloqueada!"
+      : `Necesitas ${21 - streak} días más de racha`;
+    diaBtn.querySelector("small").textContent = streakUnlocked
+      ? `¡Racha de ${streak} días! Día libre merecido`
+      : `Racha actual: ${streak}/21 días`;
+  }
+}
+
+function initDailyRewards() {
+  document.querySelector("#rewardFumar")?.addEventListener("click", () => {
+    claimReward("no-fumar", 100, "Día sin fumar");
   });
+  document.querySelector("#rewardAgua")?.addEventListener("click", () => {
+    claimReward("beber-agua", 100, "Beber agua");
+  });
+  document.querySelector("#rewardDia")?.addEventListener("click", claimDiaLibre);
 }
 
 /* ── recordatorios / notificaciones ── */
@@ -500,5 +530,5 @@ document.querySelector("#avatarModal").addEventListener("click", e => {
 loadProgress();
 applyAvatar();
 initNotifButton();
-initShopRewards();
+initDailyRewards();
 render();
