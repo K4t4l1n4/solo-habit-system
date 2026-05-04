@@ -340,14 +340,14 @@ h2 {
   transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
 }
 
-/* Solo aplica hover a misiones no completadas */
+/* Hover solo en misiones pendientes */
 .quest:not(.done):hover, .reward:hover, .icon-button:hover {
   transform: translateY(-1px);
   border-color: var(--line-strong);
   background: rgba(150, 0, 255, 0.18);
 }
 
-/* Misión completada: borde verde, cursor normal, sin lift en hover */
+/* Misión completada */
 .quest.done {
   border-color: rgba(0, 255, 136, 0.62);
   cursor: default;
@@ -478,30 +478,39 @@ h2 {
   box-shadow: 0 0 20px rgba(195, 0, 255, 0.55);
 }
 
-.calendar-month-name {
-  color: var(--muted);
-  font-family: Inter, sans-serif;
-  font-size: 0.88em;
-  font-weight: 600;
+/* ── Calendario ── */
+
+/* Etiqueta "Mayo 2026" sobre el grid */
+.calendar-month-label {
+  margin: 0 0 10px;
+  color: var(--gold);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .week-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 5px;
-  margin-top: 4px;
 }
 
+/* Headers (L M X J V S D) — mismo tamaño base que las celdas */
 .day-header {
+  display: grid;
+  place-items: center;
+  min-height: 30px;
   text-align: center;
   color: var(--cyan);
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  padding: 4px 0 6px;
+  padding: 0;
 }
 
+/* Celdas de número de día */
 .day-cell {
   min-height: 34px;
   display: grid;
@@ -532,9 +541,34 @@ h2 {
   box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.06);
 }
 
-.day-cell.future {
-  opacity: 0.3;
+.day-cell.future { opacity: 0.3; }
+
+/* Botón de recordatorios */
+.notif-toggle {
+  display: block;
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px 14px;
+  border: 1px solid rgba(170, 0, 255, 0.38);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  text-align: center;
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
 }
+
+.notif-toggle:hover {
+  background: rgba(170, 0, 255, 0.14);
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+
+/* ── Tienda de recompensas ── */
 
 .inventory-card { min-height: 260px; }
 
@@ -602,6 +636,8 @@ h2 {
   background: radial-gradient(circle at 35% 28%, white, #ffd36b 28%, #9b541d 70%);
 }
 
+/* ── Boss card ── */
+
 .boss-card {
   display: grid;
   grid-template-columns: 200px auto;
@@ -654,7 +690,8 @@ h2 {
 .shadow-hunter::before { left: -20px; transform: rotate(38deg); }
 .shadow-hunter::after  { right: -20px; transform: rotate(-38deg); }
 
-/* Avatar picker */
+/* ── Avatar picker ── */
+
 .avatar-modal {
   position: fixed;
   inset: 0;
@@ -723,6 +760,8 @@ h2 {
   right: 14px;
 }
 
+/* ── Toast ── */
+
 .toast {
   position: fixed;
   left: 50%;
@@ -773,6 +812,8 @@ h2 {
 
 @keyframes rotate { to { transform: rotate(360deg); } }
 
+/* ── Responsive ── */
+
 @media (max-width: 920px) {
   .hero-panel { grid-template-columns: 1fr; min-height: auto; align-items: start; padding: 24px; }
   .dashboard {
@@ -795,6 +836,6 @@ h2 {
   .hunter-card { grid-template-columns: 86px 1fr; }
   .quest, .reward { grid-template-columns: 1fr; }
   .avatar-ring { width: 76px; }
-  .week-grid { gap: 6px; }
-  .day-cell { min-height: 40px; font-size: 0.74rem; }
+  .week-grid { gap: 4px; }
+  .day-cell, .day-header { min-height: 36px; font-size: 0.7rem; }
 }

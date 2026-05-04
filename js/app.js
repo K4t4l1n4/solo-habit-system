@@ -15,11 +15,11 @@ const QUEST_STAT_WEIGHTS = {
 };
 
 const STAT_MAX = {
-  Fuerza:       390,  // 100+100+100+30+30+15+15
-  Enfoque:      620,  // 100+100+100+100+100+60+60
-  Disciplina:   700,  // 100×7
-  Conocimiento: 460,  // 60+60+60+100+100+60+20
-  Mentalidad:   700,  // 100×7
+  Fuerza:       390,
+  Enfoque:      620,
+  Disciplina:   700,
+  Conocimiento: 460,
+  Mentalidad:   700,
 };
 
 const state = {
@@ -120,9 +120,6 @@ function loadProgress() {
     if (data.questDate === getTodayStr() && data.questsDone) {
       state.quests.forEach(q => { q.done = Boolean(data.questsDone[q.id]); });
       state.hp = state.quests.filter(q => q.done).reduce((sum, q) => sum + q.xp, 0);
-      const today = getTodayStr();
-      if (state.rewardsClaimed[`lectura-${today}`])  state.hp += 50;
-      if (state.rewardsClaimed[`no-fumar-${today}`]) state.hp += 100;
     }
     recalcStats();
   } catch (_) {}
@@ -179,11 +176,14 @@ function renderCalendar() {
 
   const MONTH_NAMES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio",
                         "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+  /* Muestra "Mayo 2026" encima del grid */
   const monthEl = document.querySelector("#calendarMonth");
   if (monthEl) monthEl.textContent = `${MONTH_NAMES[month]} ${year}`;
 
   weekGrid.innerHTML = "";
 
+  /* Cabeceras de día */
   ["L","M","X","J","V","S","D"].forEach(d => {
     const h = document.createElement("div");
     h.className = "day-header";
@@ -191,12 +191,14 @@ function renderCalendar() {
     weekGrid.append(h);
   });
 
+  /* Celdas vacías para el offset del primer día */
   for (let i = 0; i < offset; i++) {
     const e = document.createElement("div");
     e.className = "day-cell empty";
     weekGrid.append(e);
   }
 
+  /* Celdas de días del mes */
   for (let d = 1; d <= daysInMonth; d++) {
     const dateStr    = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
     const isToday    = d === todayDate;
@@ -218,30 +220,6 @@ function renderRankPath() {
     node.textContent = rank;
     rankPath.append(node);
   });
-}
-
-function renderRewards() {
-  const streak  = calculateStreak();
-  const today   = getTodayStr();
-  const lectClaimed    = Boolean(state.rewardsClaimed[`lectura-${today}`]);
-  const fumarClaimed   = Boolean(state.rewardsClaimed[`no-fumar-${today}`]);
-  const streakUnlocked = streak >= 21;
-
-  const diaBtn   = document.querySelector("#rewardDia");
-  const lectBtn  = document.querySelector("#rewardLectura");
-  const fumarBtn = document.querySelector("#rewardFumar");
-
-  if (diaBtn) {
-    diaBtn.disabled = !streakUnlocked;
-    diaBtn.title = streakUnlocked
-      ? "¡Racha de 21 días desbloqueada!"
-      : `Necesitas ${21 - streak} días más de racha`;
-    diaBtn.querySelector("small").textContent = streakUnlocked
-      ? `¡Racha de ${streak} días! Día libre merecido`
-      : `Racha actual: ${streak}/21 días`;
-  }
-  if (lectBtn)  { lectBtn.disabled  = lectClaimed;  }
-  if (fumarBtn) { fumarBtn.disabled = fumarClaimed; }
 }
 
 function drawRadar() {
@@ -329,13 +307,12 @@ function renderHUD() {
   if (completed >= total) {
     bossP.textContent = "Golpe crítico activado. La racha de hoy queda protegida.";
   } else if (streak >= 30) {
-    bossP.textContent = `¡Racha de ${streak} días activa! Rango A desbloqueado automáticamente. Completa ${total - completed} misiones más.`;
+    bossP.textContent = `¡Racha de ${streak} días activa! Rango A desbloqueado. Completa ${total - completed} misiones más.`;
   } else {
     const left = 30 - streak;
     bossP.textContent = `Completa ${total - completed} misiones más. ${streak > 0 ? `Racha: ${streak} días (${left} para Rango A).` : "Mantén la racha 30 días para ascender a Rango A."}`;
   }
   renderRankPath();
-  renderRewards();
 }
 
 function render() {
@@ -365,30 +342,6 @@ function toggleQuest(id) {
   render();
 }
 
-function claimReward(rewardId, xpBonus, label) {
-  const key = `${rewardId}-${getTodayStr()}`;
-  if (state.rewardsClaimed[key]) {
-    showToast("Ya reclamaste esta recompensa hoy.");
-    return;
-  }
-  state.rewardsClaimed[key] = true;
-  state.xp    += xpBonus;
-  state.hp    += xpBonus;
-  state.coins += Math.round(xpBonus * 1.2);
-  showToast(`${label}: +${xpBonus} XP obtenidos.`);
-  saveProgress();
-  render();
-}
-
-function claimDiaLibre() {
-  const streak = calculateStreak();
-  if (streak < 21) {
-    showToast(`Necesitas ${21 - streak} días más de racha para el día libre.`);
-    return;
-  }
-  showToast(`¡Felicidades! Tienes ${streak} días de racha. ¡Día libre merecido, cazadora!`);
-}
-
 function resetDay() {
   state.hp = 0;
   state.quests.forEach(q => { q.done = false; });
@@ -403,17 +356,83 @@ function resetDay() {
   render();
 }
 
-/* ── listeners ── */
+/* ── tienda de recompensas (data-cost) ── */
 
-document.querySelector("#resetDay").addEventListener("click", resetDay);
+function initShopRewards() {
+  document.querySelectorAll(".reward[data-cost]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const cost  = Number(btn.dataset.cost);
+      const label = btn.querySelector("strong").textContent;
+      const small = btn.querySelector("small").textContent;
 
-document.querySelector("#rewardDia")?.addEventListener("click", claimDiaLibre);
-document.querySelector("#rewardLectura")?.addEventListener("click", () => {
-  claimReward("lectura", 50, "Lectura completada");
-});
-document.querySelector("#rewardFumar")?.addEventListener("click", () => {
-  claimReward("no-fumar", 100, "No fumaste hoy");
-});
+      if (state.coins < cost) {
+        showToast(`Necesitas ${cost - state.coins}G más para "${label}".`);
+        return;
+      }
+
+      state.coins -= cost;
+
+      if (small.includes("+20 HP")) {
+        state.hp = Math.min(HP_MAX, state.hp + 20);
+        showToast(`${label} usada. +20 HP · -${cost}G`);
+      } else if (small.includes("+35 XP")) {
+        state.xp += 35;
+        showToast(`${label} activo. +35 XP · -${cost}G`);
+      } else {
+        showToast(`${label} comprada. -${cost}G`);
+      }
+
+      saveProgress();
+      render();
+    });
+  });
+}
+
+/* ── recordatorios / notificaciones ── */
+
+function toggleNotifications() {
+  const btn  = document.querySelector("#notifToggle");
+  const isOn = localStorage.getItem("notif") === "1";
+
+  if (isOn) {
+    localStorage.removeItem("notif");
+    if (btn) btn.textContent = "🔕 Recordatorios OFF";
+    showToast("Recordatorios desactivados.");
+    return;
+  }
+
+  if (!("Notification" in window)) {
+    showToast("Tu navegador no soporta notificaciones.");
+    return;
+  }
+
+  if (Notification.permission === "denied") {
+    showToast("Notificaciones bloqueadas. Actívalas en el navegador.");
+    return;
+  }
+
+  Notification.requestPermission().then(perm => {
+    if (perm === "granted") {
+      localStorage.setItem("notif", "1");
+      if (btn) btn.textContent = "🔔 Recordatorios ON";
+      showToast("¡Recordatorios activados!");
+      new Notification("Solo Habit Leveling", {
+        body: "¡Sistema activo! No olvides completar tus misiones hoy.",
+        icon: "assets/avatars/shadow-1.svg"
+      });
+    } else {
+      showToast("Permiso de notificaciones denegado.");
+    }
+  });
+}
+
+function initNotifButton() {
+  const btn = document.querySelector("#notifToggle");
+  if (!btn) return;
+  btn.textContent = localStorage.getItem("notif") === "1"
+    ? "🔔 Recordatorios ON"
+    : "🔕 Recordatorios OFF";
+}
 
 /* ── avatar picker ── */
 
@@ -424,7 +443,7 @@ function applyAvatar() {
   const img  = document.querySelector("#avatarImg");
   const face = document.querySelector("#avatarFace");
   if (selectedAvatar >= 0) {
-    img.src = `assets/avatars/shadow-${selectedAvatar + 1}.svg`;
+    img.src    = `assets/avatars/shadow-${selectedAvatar + 1}.svg`;
     img.hidden = false;
     face.hidden = true;
   } else {
@@ -464,6 +483,10 @@ function selectAvatar(index) {
   window.setTimeout(closeAvatarModal, 700);
 }
 
+/* ── listeners ── */
+
+document.querySelector("#resetDay").addEventListener("click", resetDay);
+
 document.querySelector("#avatarRing").addEventListener("click", openAvatarModal);
 document.querySelector("#avatarRing").addEventListener("keydown", e => {
   if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openAvatarModal(); }
@@ -476,4 +499,6 @@ document.querySelector("#avatarModal").addEventListener("click", e => {
 /* ── init ── */
 loadProgress();
 applyAvatar();
+initNotifButton();
+initShopRewards();
 render();

@@ -21,7 +21,7 @@
 
       <div class="hunter-card glass-card">
         <div class="avatar-ring" id="avatarRing" role="button" tabindex="0" aria-label="Cambiar avatar">
-          <img class="avatar-img" id="avatarImg" alt="Avatar seleccionado" hidden>
+          <img class="avatar-img" id="avatarImg" src="" alt="Avatar seleccionado" hidden>
           <div class="avatar-face" aria-hidden="true" id="avatarFace">
             <span class="hair"></span>
             <span class="eyes"></span>
@@ -81,7 +81,7 @@
         <div class="xp-meter">
           <div class="xp-fill" id="xpFill"></div>
         </div>
-        <p class="xp-progress-label" id="xpProgress">0/3.500 XP al siguiente nivel</p>
+        <p class="xp-progress-label" id="xpProgress">0 / 3.500 XP al siguiente nivel</p>
         <div class="rank-path" id="rankPath"></div>
       </article>
 
@@ -89,11 +89,13 @@
         <header class="card-header">
           <div>
             <span class="label">Streak board</span>
-            <h2>Racha · <span class="calendar-month-name" id="calendarMonth"></span></h2>
+            <h2>Calendario de racha</h2>
           </div>
           <span class="chip"><strong id="streakText">0</strong> días</span>
         </header>
+        <p class="calendar-month-label" id="calendarMonth"></p>
         <div class="week-grid" id="weekGrid"></div>
+        <button class="notif-toggle" id="notifToggle" onclick="toggleNotifications()">🔕 Recordatorios OFF</button>
       </article>
 
       <article class="glass-card inventory-card">
@@ -104,17 +106,17 @@
           </div>
         </header>
         <div class="reward-list">
-          <button class="reward" id="rewardDia">
+          <button class="reward" data-cost="80">
             <span class="orb violet"></span>
-            <span><strong>Día libre</strong><small>Por cumplir 21 días de racha</small></span>
+            <span><strong>Elixir de energía</strong><small>+20 HP · cuesta 80G</small></span>
           </button>
-          <button class="reward" id="rewardLectura">
+          <button class="reward" data-cost="140">
             <span class="orb cyan"></span>
-            <span><strong>Lectura</strong><small>Leer hoy · +50 XP de recompensa</small></span>
+            <span><strong>Boost de enfoque</strong><small>+35 XP · cuesta 140G</small></span>
           </button>
-          <button class="reward" id="rewardFumar">
+          <button class="reward" data-cost="220">
             <span class="orb gold"></span>
-            <span><strong>No fumar</strong><small>No fumar hoy · +100 XP de recompensa</small></span>
+            <span><strong>Llave de mazmorra</strong><small>Desbloquea un reto extra · cuesta 220G</small></span>
           </button>
         </div>
       </article>
